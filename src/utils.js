@@ -32,17 +32,17 @@ export const convertTimeToReadable = (date, locale="en-GB") => {
 
 export const sendMailgunEmail = async (_location, _html) => {
   const formData = new FormData();
-  formData.append('from',process.env.MAILGUN_FROM);
-  formData.append('to', process.env.MAILGUN_TO);
-  formData.append('subject', `✅ Amazon job ${_location}`);
+  formData.append('from',import.meta.env.VITE_MAILGUN_FROM);
+  formData.append('to', import.meta.env.VITE_MAILGUN_TO);
+  formData.append('subject', `✅ Amazon job at ${_location}`);
   formData.append('html', _html);
   formData.append('h:Priority', 'high');  // useless
   formData.append('h:X-Category', 'personal');  // useless
 
-  const response = await fetch(process.env.MAILGUN_URL, {
+  const response = await fetch(import.meta.env.VITE_MAILGUN_URL, {
     method: 'POST',
     headers: {
-      'Authorization': 'Basic ' + btoa('api:' + process.env.MAILGUN_API_KEY),  // Basic Auth for Mailgun
+      'Authorization': 'Basic ' + btoa('api:' + import.meta.env.VITE_MAILGUN_API_KEY),  // Basic Auth for Mailgun
     },
     body: formData,
   });

@@ -9,8 +9,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
 });
 
-const targetURL = process.env.AMAZON_JOB_URL || "https://www.jobsatamazon.co.uk/app#/jobSearch";
-const intervalInSeconds = 60; // Reload every n m.seconds
+const targetURL = import.meta.env.VITE_AMAZON_JOB_URL || "https://www.jobsatamazon.co.uk/app#/jobSearch";
+const interval = parseInt(import.meta.env.VITE_RELOAD_FREQUENCY_IN_SECONDS) * 1000;
 
 let intervalId = null;
 
@@ -42,12 +42,12 @@ function findTabAndReload() {
 // Start the interval when extension is installed or reloaded
 chrome.runtime.onInstalled.addListener(() => {
   console.log("Auto Tab Reloader installed.");
-  intervalId = setInterval(findTabAndReload, intervalInSeconds * 1000);
+  intervalId = setInterval(findTabAndReload, interval);
 });
 
 // Also start it when service worker wakes up (cold start)
 // findTabAndReload();
-intervalId = setInterval(findTabAndReload, intervalInSeconds * 1000);
+intervalId = setInterval(findTabAndReload, interval);
 
 
 

@@ -11,7 +11,7 @@ export const addLog = async (logText, logLevel="DEBUG") => {
   };
 
   try {
-    await addDoc(collection(db, process.env.FIRESTORE_COLLECTION_NAME__LOG), {
+    await addDoc(collection(db, import.meta.env.VITE_FIRESTORE_COLLECTION_NAME__LOG), {
       level: logLevel,
       log: `${emot[logLevel]} ${logText}`,
       createdAt: new Date().toISOString()
@@ -25,19 +25,19 @@ export const addUniqueAmazonJobs = async jobData => {
   try {
     const hashId = await sha256(JSON.stringify(sortObjByKey(jobData)));
 
-    const jobRef = doc(db, process.env.FIRESTORE_COLLECTION_NAME__JOB, hashId);
+    const jobRef = doc(db, import.meta.env.VITE_FIRESTORE_COLLECTION_NAME__JOB, hashId);
     const docSnap = await getDoc(jobRef);
 
     if (docSnap.exists()) {
       console.warn("Job already exists with hash ID:", hashId);
     } else {
       await sendMailgunEmail(jobData.Location,
-        `<h1>New jobData found at Amazon at ${convertTimeToReadable(new Date())}</h1>
+        `<h1>New job posted in ${jobData.Location} at ${convertTimeToReadable(new Date())}</h1>
           <span><b>Title:</b> <h4 style="display: inline">${jobData.Title}</h4></span>
           <p><b>Location:</b> ${jobData.Location}</p>
           <p><b>Pay:</b> ${jobData["Pay rate"]} ${jobData.Type}</p>
           <p><b>Type:</b> ${jobData.Type} (${jobData.Duration})</p>
-          <p><a href=${process.env.AMAZON_JOB_URL || "https://www.jobsatamazon.co.uk/app#/jobSearch"}>
+          <p><a href=${import.meta.env.VITE_AMAZON_JOB_URL || "https://www.jobsatamazon.co.uk/app#/jobSearch"}>
             Click to apply</a></p>
       `)
 
