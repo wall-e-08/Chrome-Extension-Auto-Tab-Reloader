@@ -25,5 +25,6 @@ dist-ssr
 
 # Ignore zone identifiers (files with stream data)
 *.zone-id
+*Zone.Identifier
 .env
 
