@@ -1,4 +1,5 @@
 import {addLog, addUniqueAmazonJobs} from "./firebase/model.js"
+// import { config } from "./config.js";  // New config file with environment variables
 
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
@@ -10,18 +11,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 });
 
 const targetURL = import.meta.env.VITE_AMAZON_JOB_URL || "https://www.jobsatamazon.co.uk/app#/jobSearch";
-const interval = parseInt(import.meta.env.VITE_RELOAD_FREQUENCY_IN_SECONDS) * 1000;
-
-let intervalId = null;
+const intervalInMinutes = parseInt(import.meta.env.VITE_RELOAD_FREQUENCY_IN_SECONDS || "90") / 60;
 
 function findTabAndReload() {
   chrome.tabs.query({}, (tabs) => {
     const targetTab = tabs.find(tab => tab.url && tab.url.includes(targetURL));
-    // console.log(`found id: ${targetTab.id}`)
 
     if (targetTab) {
       chrome.tabs.reload(targetTab.id);
-      // console.log(`Reloaded tab with ID: ${targetTab.id}`);
 
       // Listen for tab update to inject content script after reload
       chrome.tabs.onUpdated.addListener(function listener(tabId, info) {
@@ -39,21 +36,27 @@ function findTabAndReload() {
   });
 }
 
-// Start the interval when extension is installed or reloaded
+// When extension is first installed
 chrome.runtime.onInstalled.addListener(() => {
-  console.log("Auto Tab Reloader installed.");
-  intervalId = setInterval(findTabAndReload, interval);
+  // console.log("Auto Tab Reloader installed. <<ALARM TRIGGERED>>");
+  // intervalId = setInterval(findTabAndReload, interval);
+  chrome.alarms.create("reloadTabAlarm", {
+    periodInMinutes: intervalInMinutes
+  });
 });
 
-// Also start it when service worker wakes up (cold start)
-// findTabAndReload();
-intervalId = setInterval(findTabAndReload, interval);
+// When browser starts up
+chrome.runtime.onStartup.addListener(() => {
+  // console.log("chrome.runtime.onStartup. <<ALARM TRIGGERED>>");
+  chrome.alarms.create("reloadTabAlarm", {
+    periodInMinutes: intervalInMinutes
+  });
+});
 
-
-
-
-
-
-
-
-
+// Alarm event listener
+chrome.alarms.onAlarm.addListener((alarm) => {
+  // console.log("chrome.alarms.onAlarm. <<findTabAndReload called!!>>");
+  if (alarm.name === "reloadTabAlarm") {
+    findTabAndReload();
+  }
+});

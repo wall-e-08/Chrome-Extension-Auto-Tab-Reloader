@@ -3,7 +3,7 @@
   "name": "Auto Tab Reloader",
   "version": "1.0",
   "description": "Automatically reload a tab with a specific URL after a set interval.",
-  "permissions": ["tabs", "scripting", "storage"],
+  "permissions": ["tabs", "scripting", "storage", "alarms"],
   "host_permissions": ["<all_urls>"],
   "content_scripts": [
     {
