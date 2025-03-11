@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Auto Tab Reloader",
+  "version": "1.0",
+  "description": "Automatically reload a tab with a specific URL after a set interval.",
+  "permissions": ["tabs", "scripting", "storage"],
+  "host_permissions": ["<all_urls>"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["assets/content.js"],
+      "run_at": "document_idle"
+//      "run_at": "document_end"
+    }
+  ],
+  /*"web_accessible_resources": [
+    {
+      "resources": [
+        "firebase/firebase-app.js",
+        "firebase/firebase-firestore.js",
+        "firebase-init.js"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ],*/
+  "background": {
+//    "page": "background.html",
+//    "persistent": false
+    "service_worker": "assets/background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "src/popup.html"
+//    "default_icon": "hello_extensions.png"
+  }
+}

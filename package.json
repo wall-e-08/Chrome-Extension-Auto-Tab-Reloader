@@ -1,0 +1,19 @@
+{
+  "name": "auto-tab-reloader",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^6.2.0"
+  },
+  "dependencies": {
+    "firebase": "^11.4.0",
+    "form-data": "^4.0.2",
+    "mailgun.js": "^11.1.0"
+  }
+}
