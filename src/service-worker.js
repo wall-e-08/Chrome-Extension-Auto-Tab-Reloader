@@ -2,6 +2,23 @@ import {addLog, addUniqueAmazonJobs} from "./firebase/model.js"
 // import { config } from "./config.js";  // New config file with environment variables
 
 
+const addReloadInfoInStorage = () => {
+  chrome.storage.local.get(["totalReload"], result => {
+    let totalReloads = result.totalReload
+      , timeNow = new Date().toISOString();
+    if (!totalReloads) {
+      totalReloads = 1
+    } else {
+      totalReloads += 1
+    }
+    chrome.storage.local.set({ totalReload: totalReloads, lastReload: timeNow });
+
+    if (totalReloads%10 === 0) {
+      addLog(`Total ${totalReloads} reloads. Last: ${timeNow}`, "DEBUG")
+    }
+  });
+}
+
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.action === "updated_amazon_jobs" && msg.payload?.amazon_jobs?.length) {
     msg.payload.amazon_jobs.forEach(item => {
@@ -14,6 +31,7 @@ const targetURL = import.meta.env.VITE_AMAZON_JOB_URL || "https://www.jobsatamaz
 const intervalInMinutes = parseInt(import.meta.env.VITE_RELOAD_FREQUENCY_IN_SECONDS || "90") / 60;
 
 function findTabAndReload() {
+  addReloadInfoInStorage()
   chrome.tabs.query({}, (tabs) => {
     const targetTab = tabs.find(tab => tab.url && tab.url.includes(targetURL));
 

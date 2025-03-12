@@ -3,7 +3,7 @@
   "name": "Auto Tab Reloader",
   "version": "1.0",
   "description": "Automatically reload a tab with a specific URL after a set interval.",
-  "permissions": ["tabs", "scripting", "storage", "alarms"],
+  "permissions": ["tabs", "scripting", "storage", "alarms", "tts"],
   "host_permissions": ["<all_urls>"],
   "content_scripts": [
     {
@@ -15,11 +15,7 @@
   ],
   /*"web_accessible_resources": [
     {
-      "resources": [
-        "firebase/firebase-app.js",
-        "firebase/firebase-firestore.js",
-        "firebase-init.js"
-      ],
+      "resources": ["audio/notification.mp3"],
       "matches": ["<all_urls>"]
     }
   ],*/
