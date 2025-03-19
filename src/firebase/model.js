@@ -31,7 +31,7 @@ export const addUniqueAmazonJobs = async jobData => {
     if (docSnap.exists()) {
       console.warn("Job already exists with hash ID:", hashId);
     } else {
-      chrome.tts.speak(`New job in ${jobData.Location}`, {'pitch': 2.0});
+      chrome.tts.speak(`New job in ${jobData.Location}`, {pitch: 2.0, enqueue: true});
       await sendMailgunEmail(jobData.Location,
         `<h1>New job posted in ${jobData.Location} at ${convertTimeToReadable(new Date())}</h1>
           <span><b>Title:</b> <h4 style="display: inline">${jobData.Title}</h4></span>

@@ -10,9 +10,9 @@ export const sha256 = async (message) => {
 
 export const sortObjByKey = obj => Object.keys(obj)
   .sort() // Sorts keys alphabetically
-  .reduce((obj, key) => {
-    obj[key] = obj[key];
-    return obj;
+  .reduce((sortedObj, key) => {
+    sortedObj[key] = obj[key];
+    return sortedObj;
   }, {});
 
 // Use Intl.DateTimeFormat to format for London (GMT/BST)
