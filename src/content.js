@@ -21,7 +21,7 @@ setTimeout(() => {
       }
     });
 
-    jobData['Location'] = document
+    jobData['Location'] = elem
       .querySelector('[data-test-component="StencilReactCard"].jobCardItem [data-test-component="StencilText"]:not(.jobDetailText):last-child')
       .innerText
     jobs.push(jobData)

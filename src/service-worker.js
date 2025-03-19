@@ -13,7 +13,7 @@ const addReloadInfoInStorage = () => {
     }
     chrome.storage.local.set({ totalReload: totalReloads, lastReload: timeNow });
 
-    if (totalReloads%10 === 0) {
+    if (totalReloads%500 === 0) {
       addLog(`Total ${totalReloads} reloads. Last: ${timeNow}`, "DEBUG")
     }
   });
@@ -54,7 +54,37 @@ function findTabAndReload() {
   });
 }
 
+function createReloadAlarmIfNotExists() {
+  chrome.alarms.get("reloadTabAlarm", (alarm) => {
+    if (!alarm) {
+      chrome.alarms.create("reloadTabAlarm", {
+        periodInMinutes: intervalInMinutes
+      });
+      // console.log("Created new reloadTabAlarm.");
+    } else {
+      // console.log("reloadTabAlarm already exists. No need to create.");
+    }
+  });
+}
+
 // When extension is first installed
+chrome.runtime.onInstalled.addListener(() => {
+  // console.log("Auto Tab Reloader installed. <<ALARM TRIGGERED>>");
+  createReloadAlarmIfNotExists();
+});
+
+// When browser starts up
+chrome.runtime.onStartup.addListener(() => {
+  // console.log("chrome.runtime.onStartup. <<ALARM TRIGGERED>>");
+  createReloadAlarmIfNotExists();
+});
+
+chrome.runtime.onUpdateAvailable.addListener(() => {
+  // console.log("chrome.runtime.onUpdateAvailable. <<ALARM TRIGGERED>>");
+  createReloadAlarmIfNotExists();
+})
+
+/*// When extension is first installed
 chrome.runtime.onInstalled.addListener(() => {
   // console.log("Auto Tab Reloader installed. <<ALARM TRIGGERED>>");
   // intervalId = setInterval(findTabAndReload, interval);
@@ -70,6 +100,7 @@ chrome.runtime.onStartup.addListener(() => {
     periodInMinutes: intervalInMinutes
   });
 });
+*/
 
 // Alarm event listener
 chrome.alarms.onAlarm.addListener((alarm) => {
